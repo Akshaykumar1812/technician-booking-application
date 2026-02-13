@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Technician Registration - FixItNow</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+
+<body>
+
+    <div class="register-container">
+        <a href="{% url 'home' %}" class="close-btn">&times;</a>
+        <h2>Register as Technician</h2>
+
+
+
+        <form method="POST" enctype="multipart/form-data"
+            onsubmit="return confirm('Are you sure you want to submit your application as a Technician?');">
+            {% csrf_token %}
+
+            <label>Full Name</label>
+<input type="text" name="full_name" value="{{ request.POST.full_name }}" required>
+{% if name_error %}
+    <p class="error-message">{{ name_error }}</p>
+{% endif %}
+
+            <label>Username</label>
+            <input type="text" name="username" required>
+            {% if username_error %}
+                <p class="error-message">{{ username_error }}</p>
+            {% endif %}
+
+            <label>Email</label>
+            <input type="email" name="email" required>
+            {% if email_error %}
+                <p class="error-message">{{ email_error }}</p>
+            {% endif %}
+
+            <label>Phone</label>
+<input type="text" name="phone" required>
+{% if phone_error %}
+    <p class="error-message">{{ phone_error }}</p>
+{% endif %}
+
+            <label>City</label>
+            <input type="text" name="city" required>
+
+            <label>Category</label>
+            <select name="category" required>
+                <option value="" disabled selected>Select Service</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Plumber">Plumber</option>
+                <option value="HVAC">HVAC</option>
+                <option value="Carpentry">Carpentry</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Painting">Painting </option>
+            </select>
+
+            <label>Experience (in years)</label>
+            <input type="number" name="experience" min="0" required>
+
+            <label>Profile Picture</label>
+<input type="file" name="profile_image" accept=".jpg,.jpeg,.png" required>
+{% if profile_image_error %}
+    <p class="error-message">{{ profile_image_error }}</p>
+{% endif %}
+
+            <label>Upload ID Proof</label>
+            <input type="file" name="id_proof" accept=".pdf,.jpg,.jpeg,.png" required>
+
+            <label>Upload Verification Document</label>
+            <input type="file" name="document" accept=".pdf,.jpg,.jpeg,.png" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <label>Confirm Password</label>
+<input type="password" name="confirm_password" required>
+{% if password_error %}
+    <p class="error-message">{{ password_error }}</p>
+{% endif %}
+
+
+            <button type="submit">Submit Application</button>
+        </form>
+
+        <p class="login-link">Already a technician? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+
+</body>
+
+</html>

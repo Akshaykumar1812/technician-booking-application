@@ -1,0 +1,55 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block admin_feedback %}
+
+<div class="admin-feedback-container">
+
+    <h2 class="feedback-title">User Reviews for Technicians</h2>
+
+    {% if feedbacks %}
+    <div class="feedback-list">
+        {% for fb in feedbacks %}
+        <div class="feedback-card">
+
+            <!-- User Section -->
+            <div class="user-section">
+                <img src="{{ fb.user.profile_image.url }}" alt="User Image" class="user-img">
+                <div class="user-info">
+                    <h4 class="user-name">{{ fb.user.full_name }}</h4>
+                    <p class="feedback-date">{{ fb.created_at|date:"M d, Y, h:i A" }}</p>
+                </div>
+            </div>
+
+            <!-- Technician Section -->
+            <div class="tech-section">
+                <p>Technician Name:<strong> {{ fb.technician.full_name }}</strong></p>
+                <p>Category:<strong> {{ fb.technician.category }}</strong></p>
+                <div class="feedback-rating">
+                    {% for i in "12345"|make_list %}
+                    {% if forloop.counter <= fb.rating %} <i class="fa fa-star filled"></i>
+                        {% else %}
+                        <i class="fa fa-star"></i>
+                        {% endif %}
+                        {% endfor %}
+                        <span class="rating-number">{{ fb.rating }}/5</span>
+                </div>
+            </div>
+
+            <!-- Feedback Comment -->
+            <div class="feedback-comment-box">
+                <p class="feedback-comment">“<em>{{ fb.comment }}</em>”</p>
+            </div>
+
+        </div>
+        {% empty %}
+        <p class="no-feedback">No feedback submitted yet.</p>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-feedback">No feedback submitted yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

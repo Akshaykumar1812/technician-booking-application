@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FixItNow - User Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+
+<body>
+  <!-- Sidebar + Main Layout -->
+  <div class="d-flex">
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar d-flex flex-column shadow-sm ">
+      <div class="sidebar-header p-3 text-center">
+        <h3 class="logo">FixItNow</h3>
+      </div>
+
+      <div class="sidebar-menu flex-grow-1">
+        <ul class="nav flex-column mt-2">
+          <li class="nav-item">
+            <a href="{% url 'technician_home' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'technician_home' %}active{% endif %}">
+              <i class="fas fa-home me-2"></i>Home
+            </a>
+          </li>
+          {% if technician.status == "Approved" %}
+          <li class="nav-item">
+            <a href="{% url 'technician_calendar' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'technician_calendar' %}active{% endif %}">
+              <i class="fas fa-calendar-alt me-2"></i>My Calendar
+            </a>
+          </li>
+          <li class="nav-item"><a href="{% url 'technician_bookings' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'technician_bookings' %}active{% endif %}">
+              <i class="fas fa-calendar-check me-2"></i>Booking</a>
+          </li>
+          <li class="nav-item"><a href="{% url 'technician_feedbacks' %}" 
+            class="nav-link {% if request.resolver_match.url_name == 'technician_feedbacks' %}active{% endif %} ">
+            <i class="fas fa-envelope me-2"></i>Review</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'technician_payment_history' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'technician_payment_history' %}active{% endif %}">
+              <i class="fas fa-credit-card me-2"></i>Payment History
+            </a>
+          </li>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'technician_profile' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'technician_profile' %}active{% endif %}">
+              <i class="fas fa-user me-2"></i>My Profile
+            </a>
+          </li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 main-area">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand-lg topbar shadow-sm px-4 d-flex justify-content-end">
+        <ul class="navbar-nav d-flex align-items-center">
+
+          <!-- Technician Notification Icon -->
+          <li class="nav-item dropdown me-3">
+            <a class="nav-link position-relative" href="#" id="techNotificationDropdown" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-bell fa-lg"></i>
+              {% if notifications.count %}
+              <span class="badge-count">{{ notifications.count }}</span>
+              {% endif %}
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end notifications-menu" aria-labelledby="techNotificationDropdown"
+              style="width: 300px; padding: 0;">
+
+              <div style="max-height: 300px; overflow-y: auto;">
+                {% if notifications %}
+                {% for notif in notifications %}
+                <li class="dropdown-item">
+                  <strong>{{ notif.title }}</strong><br>
+                  <small>{{ notif.message|truncatewords:15 }}</small><br>
+                  <small class="text-muted">{{ notif.created_on|date:"M d, Y H:i" }}</small>
+                </li>
+                {% endfor %}
+                {% else %}
+                <li class="dropdown-item text-center text-muted">No notifications</li>
+                {% endif %}
+              </div>
+
+              <li class="dropdown-item text-center border-top">
+                <a href="#" class="see-all d-block mt-2">Notifications</a>
+              </li>
+            </ul>
+          </li>
+
+
+
+
+          
+
+          <!-- technician Dropdown -->
+          {% if technician %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="{{ technician.profile_image.url }}" alt="profile" class="rounded-circle me-2 profile-pic"
+                width="35" height="35">
+              {{ technician.username }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="{% url 'logout' %}">
+                  <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+              </li>
+            </ul>
+          </li>
+          {% endif %}
+        </ul>
+      </nav>
+
+      <!-- Page Content -->
+      {% block tech_home %}
+      {% endblock %}
+
+      {% block tech_profile %}
+      {% endblock %}
+
+      {% block tech_cal %}
+      {% endblock %}
+
+      {% block tech_booking %}
+      {% endblock %}
+
+      {% block tech_payment_details %}
+      {% endblock %}
+
+      {% block tech_payment_history %}
+      {% endblock %}
+
+      {% block tech_feedback %}
+      {% endblock %}
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

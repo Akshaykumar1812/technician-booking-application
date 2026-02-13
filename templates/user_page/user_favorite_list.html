@@ -1,0 +1,74 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block user_favorite %}
+<div class="user-favorite-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Favorite Technicians</li>
+        </ol>
+    </nav>
+
+    <h2 class="welcome-text text-center">Your Favorite Technicians</h2>
+
+    <div class="row mt-4">
+        {% for fav in favorite_techs %}
+        <div class="col-md-4 mb-4">
+            <div class="card tech-card shadow-sm text-center">
+                <button class="btn btn-sm favorite-btn position-absolute top-0 end-0 m-2" data-tech-id="{{ fav.technician.id }}">
+                    ❤️
+                </button>
+
+                <div class="tech-img-container">
+                    {% if fav.technician.profile_image %}
+                        <img src="{{ fav.technician.profile_image.url }}" class="tech-img rounded-circle" alt="Tech Image">
+                    {% else %}
+                        <img src="{% static 'images/default_profile.png' %}" class="tech-img rounded-circle" alt="Tech Image">
+                    {% endif %}
+                </div>
+
+                <div class="card-body mt-4">
+                    <h5 class="tech-name">{{ fav.technician.full_name }}</h5>
+                    <p class="text-muted">{{ fav.technician.category }}</p>
+                    <p class="text-secondary">{{ fav.technician.city }}</p>
+                    <p class="text-secondary">Experience: {{ fav.technician.experience }} yrs</p>
+                    <a href="{% url 'book_now' fav.technician.id %}" class="btn btn-primary btn-sm mt-2">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">You have no favorite technicians yet.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- AJAX Script for toggling favorite -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('.favorite-btn').click(function(){
+        var btn = $(this);
+        var techId = btn.data('tech-id');
+
+        $.ajax({
+            url: "{% url 'toggle_favorite_technician' %}",
+            method: 'POST',
+            data: {
+                'tech_id': techId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+                if(response.status == 'added'){
+                    btn.html('❤️');
+                } else {
+                    btn.html('🤍');
+                    // Remove the card from this favorites page
+                    btn.closest('.col-md-4').remove();
+                }
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

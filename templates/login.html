@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - FixItNow</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body>
+
+    <div class="login-container">
+        <a href="{% url 'home' %}" class="close-btn">&times;</a>
+        <h2>Login</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Username</label>
+            <input type="text" name="username" required value="{{ request.POST.username }}">
+            {% if username_error %}
+                <p class="error-message">{{ username_error }}</p>
+            {% endif %}
+            <br><br>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+            {% if password_error %}
+                <p class="error-message">{{ password_error }}</p>
+            {% endif %}
+            <br><br>
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="register-link">Don't have an account? <br><br><a href="{% url 'register_user' %}">Register as user</a> /&nbsp;
+            <a href="{% url 'register_technician' %}">Register as technician</a></p>
+    </div>
+    
+
+</body>
+
+</html>

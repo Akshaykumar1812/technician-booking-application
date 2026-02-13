@@ -1,0 +1,66 @@
+{% extends 'technician_page/technician_dashboard.html' %}
+{% load static %}
+
+{% block tech_payment_details %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+
+<div class="payment-details-container">
+    <h2>Payment Details</h2>
+
+    <div class="payment-inner-container">
+        <!-- User & Technician Info -->
+        <div class="payment-info-header">
+            <p><strong>User:</strong> {{ booking.user.full_name }}</p>
+            <p><strong>Technician:</strong> {{ booking.technician.full_name }}</p>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="POST" class="payment-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="repair_description">Repair Details / Description</label>
+                <textarea id="repair_description" name="repair_description"
+                    placeholder="Describe the repair or Items Buy" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="labour_charge">Labour Charge</label>
+                <input type="number" id="labour_charge" name="labour_charge" step="0.01"
+                    placeholder="Enter labour charge" oninput="calculateTotal()" required>
+            </div>
+
+            <div class="form-group">
+                <label for="item_charge">Item Charge</label>
+                <input type="number" id="item_charge" name="item_charge" step="0.01" placeholder="Enter item charge"
+                    oninput="calculateTotal()">
+            </div>
+
+            <div class="form-group">
+                <label for="additional_charge">Additional Charge</label>
+                <input type="number" id="additional_charge" name="additional_charge" step="0.01"
+                    placeholder="Enter additional charge" oninput="calculateTotal()">
+            </div>
+
+            <div class="form-group total-amount">
+                <label>Total Amount</label>
+                <input type="text" id="total_amount" readonly>
+            </div>
+
+            <button type="submit" class="btn-submit">Submit Payment Details</button>
+        </form>
+
+        <a href="{% url 'technician_bookings' %}?status=Completed" class="back-link">← Back to Bookings</a>
+    </div>
+</div>
+
+<script>
+    function calculateTotal() {
+        const labour = parseFloat(document.getElementById('labour_charge').value) || 0;
+        const item = parseFloat(document.getElementById('item_charge').value) || 0;
+        const additional = parseFloat(document.getElementById('additional_charge').value) || 0;
+        const total = labour + item + additional;
+        document.getElementById('total_amount').value = total.toFixed(2);
+    }
+</script>
+{% endblock %}

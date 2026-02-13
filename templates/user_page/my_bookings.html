@@ -1,0 +1,65 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block my_booking %}
+<div class="my-bookings-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Bookings</li>
+        </ol>
+    </nav>
+    <h2>My Bookings</h2>
+
+    {% if bookings %}
+    <table class="bookings-table">
+        <thead>
+            <tr>
+                <th>Technician</th>
+                <th>Category</th>
+                <th>Repair Details</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.technician.full_name }}</td>
+                <td>{{ booking.technician.category }}</td>
+                <td>{{ booking.repair_details }}</td>
+                <td>{{ booking.date|date:"M d, Y" }}</td>
+                <td>{{ booking.time_slot }}</td>
+                <td>
+                    {% if booking.status == "Booked" %}
+                    <span class="status-pending">Waiting for technician</span>
+                    {% elif booking.status == "Accepted" %}
+                    <span class="status-accepted">Accepted ✅</span>
+                    {% elif booking.status == "Rejected" %}
+                    <span class="status-rejected">Rejected ❌</span>
+                    {% elif booking.status == "Completed" %}
+                    <span class="status-completed">Completed ✅</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if booking.status == "Booked" %}
+                    <form method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking?');">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <button type="submit" class="btn-cancel">Cancel</button>
+                    </form>
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align:center;">You have no bookings yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

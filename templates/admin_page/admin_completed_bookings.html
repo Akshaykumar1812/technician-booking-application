@@ -1,0 +1,73 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block admin_booking_view %}
+
+<div class="admin-booking-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Completed Bookings</li>
+        </ol>
+    </nav>
+
+    <h2 class="booking-title">Completed Bookings</h2>
+
+    {% if bookings %}
+    <div class="booking-list">
+
+        {% for booking in bookings %}
+        <div class="booking-card">
+
+            <!-- Header: User -->
+            <div class="booking-header">
+                <img src="{{ booking.user.profile_image.url }}" alt="User Image" class="user-img">
+                <div class="user-info">
+                    <h4>{{ booking.user.full_name }}</h4>
+                    <small class="booking-date">Booking Date: {{ booking.date|date:"M d, Y" }}</small>
+                </div>
+            </div>
+
+            <!-- Technician Info -->
+            <div class="tech-info">
+                <p><strong>Technician:</strong> {{ booking.technician.full_name }}</p>
+                <p><strong>Category:</strong> {{ booking.technician.category }}</p>
+            </div>
+
+            <!-- Booking Details -->
+            <div class="booking-details">
+                <p><strong>Service Details:</strong> {{ booking.repair_details }}</p>
+                <p>
+                    <strong>Payment Status:</strong>
+                    <span class="badge {% if booking.payment == 'Paid' %}bg-success{% else %}bg-warning{% endif %}">
+                        {{ booking.payment.payment_status }}
+                    </span>
+                </p>
+                <p>
+                    <strong>Completion Status:</strong>
+                    <span class="badge {% if booking.status == 'Completed' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ booking.status }}
+                    </span>
+                </p>
+                {% if booking.payment.payment_status == 'Paid' %}
+                <div class="transaction-btn-container">
+                    <a href="{% url 'admin_transaction_detail' booking.id %}" class="transaction-btn">
+                        <i class="fas fa-file-invoice-dollar me-2"></i>View Transaction Details
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+        </div>
+        {% empty %}
+        <p class="no-bookings">No completed bookings found.</p>
+        {% endfor %}
+
+    </div>
+    {% else %}
+    <p class="no-bookings">No completed bookings found.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

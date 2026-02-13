@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration - FixItNow</title>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+
+<body>
+
+    <div class="register-container">
+        <a href="{% url 'home' %}" class="close-btn">&times;</a>
+        <h2>Create Your Account</h2>
+
+
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label>Full Name</label>
+            <input type="text" name="name" value="{{ name|default:'' }}" required>
+            {% if name_error %}
+            <p class="error-message">{{ name_error }}</p>
+            {% endif %}
+
+            <label>Username</label>
+            <input type="text" name="username" value="{{ username|default:'' }}" required>
+            {% if username_error %}
+            <p class="error-message">{{ username_error }}</p>
+            {% endif %}
+
+            <label>Email</label>
+            <input type="email" name="email" value="{{ email|default:'' }}" required>
+            {% if email_error %}
+            <p class="error-message">{{ email_error }}</p>
+            {% endif %}
+
+            <label>Phone Number</label>
+            <input type="text" name="phone" value="{{ phone|default:'' }}" required>
+            {% if phone_error %}
+            <p class="error-message">{{ phone_error }}</p>
+            {% endif %}
+
+            <label>Profile Image</label>
+            <input type="file" name="profile_image" required>
+            {% if profile_error %}
+            <p class="error-message">{{ profile_error }}</p>
+            {% endif %}
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <label>Confirm Password</label>
+            <input type="password" name="confirm_password" required>
+            {% if password_error %}
+            <p class="error-message">{{ password_error }}</p>
+            {% endif %}
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+
+</body>
+
+</html>

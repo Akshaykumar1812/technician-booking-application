@@ -1,0 +1,213 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block user_techlist %}
+
+<div class="user-tech-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'user_services' %}">Services</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Technicians</li>
+        </ol>
+    </nav>
+    <h2 class="welcome-text text-center">Available Technicians{% if category_name %} - {{ category_name }}{% endif %}</h2>
+
+    <!-- Find Nearby Technicians Button -->
+<div class="find-nearby-container">
+    <button id="find-nearby-btn">
+        Find Nearby Technicians
+    </button>
+</div>
+
+<!-- Manual Search -->
+<div class="manual-search">
+    <input type="text" id="search-location" placeholder="Enter city or location">
+    <button id="search-btn">Search</button>
+</div>
+
+<!-- Nearby Results -->
+<div id="nearby-results" class="nearby-results"></div>
+
+    <!-- Find Nearby Button -->
+    <div id="favorite-container" class="row mt-4">
+        {% for tech in technicians %}
+        <div class="col-md-4 mb-4">
+            <div class="card tech-card shadow-sm text-center">
+                <button class="btn btn-sm favorite-btn position-absolute top-0 end-0 m-2" data-tech-id="{{ tech.id }}">
+                    {% if tech.id in favorited_ids %}
+                    ❤️
+                    {% else %}
+                    🤍
+                    {% endif %}
+                </button>
+                <!-- Profile Image Container -->
+                <div class="tech-img-container">
+                    {% if tech.profile_image %}
+                    <img src="{{ tech.profile_image.url }}" class="tech-img rounded-circle" alt="Tech Image">
+                    {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" class="tech-img rounded-circle"
+                        alt="Tech Image">
+                    {% endif %}
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body mt-4">
+                    <h5 class="tech-name">{{ tech.full_name }}</h5>
+                    <p class="text-muted">{{ tech.category }}</p>
+                    <p class="text-secondary">{{ tech.city }}</p>
+                    <p class="text-secondary">Experience: {{ tech.experience }} yrs</p>
+                    <a href="{% url 'book_now' tech.id  %}" class="btn btn-primary btn-sm mt-2">Book Now</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No approved technicians available.</p>
+        {% endfor %}
+    </div>
+</div>
+<!-- AJAX Script for Favorite Button -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('.favorite-btn').click(function () {
+        var btn = $(this);
+        var techId = btn.data('tech-id');
+
+        $.ajax({
+            url: "{% url 'toggle_favorite_technician' %}",
+            method: 'POST',
+            data: {
+                'tech_id': techId,
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            },
+            success: function(response){
+                if(response.status == 'added'){
+                    btn.html('❤️'); // turn red
+                } else {
+                    btn.html('🤍'); // turn white
+                }
+            }
+        });
+    });
+});
+
+$(document).ready(function () {
+    $('#find-nearby-btn').click(function () {
+        $.ajax({
+            url: "{% url 'find_nearby_technicians' %}",  // your view
+            method: 'GET',
+            data: {
+                category: "{{ category_name|default:'' }}"  // filter by category if exists
+            },
+            success: function(response) {
+    var nearbyDiv = $('#nearby-results');
+    nearbyDiv.empty();  // clear previous content
+
+    if (response.technicians.length === 0) {
+        nearbyDiv.html('<p class="text-center text-muted">No nearby technicians found within 10 km.</p>');
+        $('#favorite-container').hide(); // hide original list
+    } else {
+        $('#favorite-container').hide(); // hide original list
+
+        // Create a row container
+        var rowDiv = $('<div class="row"></div>');
+
+        response.technicians.forEach(function(tech) {
+            var heart = response.favorited_ids && response.favorited_ids.includes(tech.id) ? '❤️' : '🤍';
+            
+            var card = `
+            <div class="col-md-4 mb-4">
+                <div class="card tech-card shadow-sm text-center">
+                    <button class="btn btn-sm favorite-btn position-absolute top-0 end-0 m-2" data-tech-id="${tech.id}">${heart}</button>
+                    <div class="tech-img-container">
+                        <img src="/media/${tech.profile_image || 'default_profile.png'}" class="tech-img rounded-circle" alt="Tech Image">
+                    </div>
+                    <div class="card-body mt-4">
+                        <h5 class="tech-name">${tech.full_name}</h5>
+                        <p class="text-muted">${tech.category}</p>
+                        <p class="text-secondary">${tech.city}</p>
+                        <p class="text-secondary">Experience: ${tech.experience} yrs</p>
+                        <p class="text-secondary"><i class="fas fa-location-dot"></i> ${tech.distance.toFixed(2)} km</p>
+                        <a href="/book-now/${tech.id}/" class="btn btn-primary btn-sm mt-2">Book Now</a>
+                    </div>
+                </div>
+            </div>`;
+            rowDiv.append(card);
+        });
+
+        nearbyDiv.append(rowDiv); // append the row container
+    }
+},
+            error: function() {
+                alert('Error fetching nearby technicians.');
+            }
+        });
+    });
+
+ 
+    
+
+
+// Manual search functionality
+$('#search-btn').click(function () {
+    var location = $('#search-location').val().trim();
+    if (!location) {
+        alert("Please enter a city or location to search.");
+        return;
+    }
+
+    $.ajax({
+        url: "{% url 'find_nearby_technicians' %}", // reuse your existing view
+        method: 'GET',
+        data: {
+            location: location,
+            category: "{{ category_name|default:'' }}"
+        },
+        success: function(response) {
+            var nearbyDiv = $('#nearby-results');
+            nearbyDiv.empty();
+            $('#favorite-container').hide(); // hide original list
+
+            if (response.technicians.length === 0) {
+                nearbyDiv.html('<p class="text-center text-muted">No technicians found at this location.</p>');
+            } else {
+                var rowDiv = $('<div class="row"></div>');
+
+                response.technicians.forEach(function(tech) {
+                    var heart = response.favorited_ids && response.favorited_ids.includes(tech.id) ? '❤️' : '🤍';
+                    
+                    var card = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card tech-card shadow-sm text-center">
+                            <button class="btn btn-sm favorite-btn position-absolute top-0 end-0 m-2" data-tech-id="${tech.id}">${heart}</button>
+                            <div class="tech-img-container">
+                                <img src="/media/${tech.profile_image || 'default_profile.png'}" class="tech-img rounded-circle" alt="Tech Image">
+                            </div>
+                            <div class="card-body mt-4">
+                                <h5 class="tech-name">${tech.full_name}</h5>
+                                <p class="text-muted">${tech.category}</p>
+                                <p class="text-secondary">${tech.city}</p>
+                                <p class="text-secondary">Experience: ${tech.experience} yrs</p>
+                                ${tech.distance ? `<p class="text-secondary"><i class="fas fa-location-dot"></i> ${tech.distance.toFixed(2)} km</p>` : ''}
+                                <a href="/book-now/${tech.id}/" class="btn btn-primary btn-sm mt-2">Book Now</a>
+                            </div>
+                        </div>
+                    </div>`;
+                    rowDiv.append(card);
+                });
+
+                nearbyDiv.append(rowDiv);
+            }
+        },
+        error: function() {
+            alert('Error searching technicians.');
+        }
+    });
+});
+
+
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block notification %}
+<div class="notification-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Send Notification</li>
+        </ol>
+    </nav>
+<div class="container mt-4">
+    <h2>Send Notification</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+
+         <div class="mb-3">
+            <label class="form-label">Send To</label>
+            <select name="recipient_type" class="form-select" required>
+                <option value="users">Users</option>
+                <option value="technicians">Technicians</option>
+                <option value="both" selected>All</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" name="title" class="form-control" placeholder="Enter title" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea name="message" class="form-control" placeholder="Enter message" required></textarea>
+        </div>
+
+       
+
+        <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to send this notification?');">Send Notification</button>
+    </form>
+</div>
+</div>
+{% endblock %}
+
+        
+        
+        
+        
+        
+        

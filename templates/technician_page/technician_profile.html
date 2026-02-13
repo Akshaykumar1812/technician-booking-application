@@ -1,0 +1,139 @@
+{% extends 'technician_page/technician_dashboard.html' %}
+{% load static %}
+
+{% block tech_profile %}
+<div class="profile-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'technician_home' %}">Technician Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+        </ol>
+    </nav>
+
+    <div class="profile-content">
+        <h2 class="title text-center">My Profile</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+
+            <div class="profile-grid">
+                <!-- Left Column -->
+                <div class="profile-left">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" value="{{ technician.full_name }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" value="{{ technician.username }}" readonly>
+                    </div>
+
+
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" value="{{ technician.email }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone" value="{{ technician.phone }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Profile Image</label><br>
+                        {% if technician.profile_image %}
+                        <img src="{{ technician.profile_image.url }}" class="profile-preview" alt="Profile Image">
+                        {% endif %}
+                        <input type="file" name="profile_image">
+                    </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="profile-right">
+
+                    <div class="form-group">
+                        <label>Category</label>
+                        <input type="text" name="category" value="{{ technician.category }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Experience (Years)</label>
+                        <input type="text" name="experience" value="{{ technician.experience }}">
+                    </div>
+                    <br>
+
+                    <!-- Document View Section -->
+                    <div class="form-group">
+                        <label>Document (Certificate / License)</label>
+                        {% if technician.document %}
+                        <a href="{{ technician.document.url }}" target="_blank" class="doc-link">
+                            📄 View Uploaded Document
+                        </a>
+                        {% else %}
+                        <p class="text-muted">No document uploaded.</p>
+                        {% endif %}
+                    </div><br>
+
+                    <!-- ID Proof View Section -->
+                    <div class="form-group">
+                        <label>ID Proof (Aadhar / ID Card)</label>
+                        {% if technician.id_proof %}
+                        <a href="{{ technician.id_proof.url }}" target="_blank" class="doc-link">
+                            🪪 View Uploaded ID Proof
+                        </a>
+                        {% else %}
+                        <p class="text-muted">No ID proof uploaded.</p>
+                        {% endif %}
+                    </div><br>
+                    
+                    <input type="hidden" id="latitude" name="latitude"
+                        value="{{ technician.latitude|default_if_none:'' }}">
+                    <input type="hidden" id="longitude" name="longitude"
+                        value="{{ technician.longitude|default_if_none:'' }}">
+
+                     <div class="form-group">
+                        <label>City (Auto-detected)</label>
+                        <input type="text" id="city" name="city" value="{{ technician.city|default_if_none:'' }}"
+                            readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="button" class="detect-btn" onclick="getLocation()">Detect My Location</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions text-center">
+                <button type="submit" class="update-btn">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById("latitude").value = position.coords.latitude;
+        document.getElementById("longitude").value = position.coords.longitude;
+
+        fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json&accept-language=en&addressdetails=1`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("city").value = data.address.city || data.address.town || data.address.village || '';
+            });
+    }
+
+    function showError(error) {
+        alert("Unable to fetch your location. Please allow location access.");
+    }
+</script>
+{% endblock %}

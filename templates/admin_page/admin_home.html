@@ -1,0 +1,68 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2 class="welcome-text">Welcome Admin</h2>
+
+    <!-- Cards Row -->
+    <div class="row dashboard-cards">
+
+        <!-- Total Users -->
+        <div class="col-md-3">
+            <div class="card card-users">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span>Total Users</span>
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>{{ total_users }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Technicians -->
+        <div class="col-md-3">
+            <div class="card card-techs">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span>Total Technicians</span>
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3>{{ total_technicians }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Bookings -->
+        <div class="col-md-3">
+            <div class="card card-bookings">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span>Total Bookings</span>
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3>{{ total_bookings }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Transactions -->
+        <div class="col-md-3">
+            <div class="card card-complaints">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span>Total Transactions</span>
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>{{ total_transactions }}</h3>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+{% endblock %}

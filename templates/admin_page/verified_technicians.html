@@ -1,0 +1,44 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block tech_list %}
+<div class="verified-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Verified Technicians</li>
+        </ol>
+    </nav>
+    
+    <div class="container">
+<h2 class="title text-center">Verified Technicians</h2>
+        {% if technicians %}
+        <ul class="techi-list">
+            {% for tech in technicians %}
+            <li class="techi-item">
+                <div class="techi-info">
+                    {% if tech.profile_image %}
+                    <img src="{{ tech.profile_image.url }}" alt="Profile picture of {{ tech.full_name }}" class="tech-avatar">
+                    {% else %}
+                    <img src="{% static 'images/default-avatar.png' %}" alt="Default Profile" class="tech-avatar">
+                    {% endif %}
+                    <div>
+                        <h3>{{ tech.full_name }} <span class="badge bg-success">Verified</span></h3>
+                        <p>{{ tech.category }}</p>
+                    </div>
+                </div>
+                <div class="techi-actions">
+                    <!-- Optional: view more details button -->
+                    <a href="{% url 'verified_tech_detail' tech.id %}" class="btn views-btn">
+                        <i class="fas fa-eye"></i> View More
+                    </a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="no-requests">No verified technicians yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

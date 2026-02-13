@@ -1,0 +1,120 @@
+{% extends 'technician_page/technician_dashboard.html' %}
+{% load static %}
+
+{% block tech_booking %}
+<div class="technician-bookings-container">
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb tech-breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'technician_home' %}">Technician Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Booking Requests</li>
+        </ol>
+    </nav>
+
+    <h2>Booking Requests</h2>
+
+    <!-- Filter Tabs -->
+    <div class="booking-tabs">
+        <a href="?status=Booked" class="{% if filter_status == 'Booked' %}active-tab{% endif %}">Pending</a>
+        <a href="?status=Accepted" class="{% if filter_status == 'Accepted' %}active-tab{% endif %}">Accepted</a>
+        <a href="?status=Rejected" class="{% if filter_status == 'Rejected' %}active-tab{% endif %}">Rejected</a>
+        <a href="?status=Completed" class="{% if filter_status == 'Completed' %}active-tab{% endif %}">Completed</a>
+    </div>
+
+    {% if bookings %}
+    <table class="bookings-table">
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Repair Details</th>
+                <th>Date</th>
+                <th>Time Slot</th>
+                <th>Action</th>
+                {% if filter_status == "Accepted" %}
+                <th>Work</th>
+                {% endif %}
+                {% if filter_status == "Completed" %}
+                <th>Payment Status</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.user.full_name }}</td>
+                <td>{{ booking.user.phone }}</td>
+                <td>
+                    {{ booking.user.address }}<br>
+                    {% if booking.user.city %}
+                    <small>City: {{ booking.user.city }}</small><br>
+                    {% endif %}
+                    {% if booking.user.latitude and booking.user.longitude %}
+                    <a href="https://www.google.com/maps/dir/?api=1&origin={{ technician.latitude }},{{ technician.longitude }}&destination={{ booking.user.latitude }},{{ booking.user.longitude }}" target="_blank"
+                        target="_blank">
+                        View on Map
+                    </a>
+                    {% endif %}
+                </td>
+                <td>{{ booking.repair_details }}</td>
+                <td>{{ booking.date|date:"M d, Y" }}</td>
+                <td>{{ booking.time_slot }}</td>
+                <td>
+                    {% if filter_status == "Booked" %}
+                    <form method="POST" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <button type="submit" name="action" value="accept" class="btn-accept">Accept</button>
+                    </form>
+                    <form method="POST" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <button type="submit" name="action" value="reject" class="btn-reject">Reject</button>
+                    </form>
+                    {% elif filter_status == "Accepted" %}
+                    <span class="status accepted">Accepted ✅</span>
+                    {% elif filter_status == "Rejected" %}
+                    <span class="status rejected">Rejected ❌</span>
+                    {% elif filter_status == "Completed" %}
+
+                    <span class="status completed">Completed ✅</span>
+                    {% if not booking.payment or booking.payment.payment_status == "Pending" %}
+                    <form action="{% url 'payment_details' booking.id %}" method="get" class="inline-form">
+                        <button type="submit" class="btn-payment">Add Payment</button>
+                    </form>
+                    {% endif %}
+
+                    {% endif %}
+                </td>
+                {% if filter_status == "Accepted" %}
+                <td>
+                    <form method="POST" class="inline-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                        <button type="submit" name="action" value="complete" class="btn-complete">Complete Work</button>
+                    </form>
+                </td>
+                {% endif %}
+                {% if filter_status == "Completed" %}
+                <td>
+                    {% if booking.payment %}
+                    {% if booking.payment.payment_status == "Pending" %}
+                    <span class="status-pendings">Pending</span>
+                    {% elif booking.payment.payment_status == "Paid" %}
+                    <span class="status-paid">Paid ✅</span>
+                    {% endif %}
+                    {% else %}
+                    -
+                    {% endif %}
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No {{ filter_status|lower }} bookings available.</p>
+    {% endif %}
+</div>
+{% endblock %}

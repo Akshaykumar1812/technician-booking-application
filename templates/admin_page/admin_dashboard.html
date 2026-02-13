@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FixItNow - Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="{% static 'css/admin_dashboard.css' %}">
+</head>
+
+<body>
+  <!-- Sidebar + Main Layout -->
+  <div class="d-flex">
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="sidebar d-flex flex-column shadow-sm ">
+
+      <!-- Fixed Logo -->
+      <div class="sidebar-header p-3 text-center">
+        <h3 class="logo">FixItNow</h3>
+      </div>
+
+      <!-- Scrollable Menu -->
+      <div class="sidebar-menu flex-grow-1">
+        <ul class="nav flex-column mt-2">
+          <li class="nav-item"><a href="{% url 'admin_home' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'admin_home' %}active{% endif %}"><i
+                class="fas fa-home me-2"></i>Home</a>
+          </li>
+          <li class="nav-item"><a href="{% url 'users_list' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'users_list' %}active{% endif %}"><i
+                class="fas fa-users me-2"></i>Users</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'verified_technicians' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'verified_technicians' %}active{% endif %}">
+              <i class="fas fa-user-check me-2"></i> Verified Technicians
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'pending_technicians' %}"
+              class="nav-link {% if request.resolver_match.url_name == 'pending_technicians' %}active{% endif %}">
+              <i class="fas fa-user-cog me-2"></i>Technician Approval
+            </a>
+          </li>
+          <li class="nav-item"><a href="{% url 'admin_completed_bookings' %}" 
+            class="nav-link {% if request.resolver_match.url_name == 'admin_completed_bookings' %}active{% endif %}">
+            <i class="fas fa-calendar-check me-2"></i>Bookings</a>
+          </li>
+          <li class="nav-item"><a href="{% url 'admin_feedbacks' %}" 
+            class="nav-link {% if request.resolver_match.url_name == 'admin_feedbacks' %}active{% endif %}"><i class="fas fa-comment-dots me-2">
+            </i>Feedbacks</a>
+          </li>
+          <li class="nav-item">
+            <a href="{% url 'send_notification' %}" 
+            class="nav-link {% if request.resolver_match.url_name == 'send_notification' %}active{% endif %}">
+            <i class="fas fa-bell me-2"></i>Send Notifications</a>
+          </li>
+        </ul>
+      </div>
+
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 main-area">
+
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand-lg topbar shadow-sm px-4">
+        <form class="d-flex me-auto">
+          
+        </form>
+        <ul class="navbar-nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="{% static 'images/technician-pic.jpg' %}" alt="profile" class="rounded-circle me-1 profile-pic">
+              Admin
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Page Content -->
+      {% block content %}
+      {% endblock %}
+
+      {% block request %}
+      {% endblock %}
+
+      {% block details %}
+      {% endblock %}
+
+      {% block tech_list %}
+      {% endblock %}
+
+      {% block verified_tech_list %}
+      {% endblock %}
+
+      {% block users_list %}
+      {% endblock %}
+
+      {% block notification %}
+      {% endblock %}
+
+      {% block admin_feedback %}
+      {% endblock %}
+
+      {% block admin_booking_view %}
+      {% endblock %}
+
+      {% block admin_transaction_detail %}
+      {% endblock %}
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

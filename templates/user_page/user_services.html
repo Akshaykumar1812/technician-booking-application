@@ -1,0 +1,34 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block user_services_list %}
+<div class="user-service-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Services</li>
+        </ol>
+    </nav>
+
+    <h2 class="service-heading">Our Service Categories</h2>
+
+    <div class="service-grid">
+        {% for service in services %}
+        <div class="service-card">
+            <!-- Icon at Top Center -->
+            <div class="service-icon-container">
+                <i class="{{ service.icon }} {{ service.color }}"></i>
+            </div>
+
+            <!-- Card Content -->
+            <div class="service-content">
+                <h3 class="service-title">{{ service.name }}</h3>
+                <p class="service-description">{{ service.description }}</p>
+                <p class="service-tech-count">{{ service.tech_count }} Technicians Available</p>
+                <a href="{% url 'user_tech_list' %}?category={{ service.name }}" class="service-btn">View Technicians</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

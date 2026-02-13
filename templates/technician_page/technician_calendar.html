@@ -1,0 +1,97 @@
+{% extends 'technician_page/technician_dashboard.html' %}
+{% load static %}
+
+{% block tech_cal %}
+<div class="calendar-container">
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb tech-breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'technician_home' %}">Technician Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Calendar</li>
+        </ol>
+    </nav>
+
+    <h2 class="calendar-title">My Calendar Schedule</h2>
+
+    <!-- Schedule Form -->
+    <form method="POST" class="calendar-form">
+        {% csrf_token %}
+        <div class="calendar-form-grid">
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" name="date" id="date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="start_time">Start Time</label>
+                <input type="time" name="start_time" id="start_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_time">End Time</label>
+                <input type="time" name="end_time" id="end_time" required>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status</label>
+                <select name="status" id="status" required>
+                    <option value="Available">Available</option>
+                    <option value="Booked">Booked</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="calendar-add-btn">Add Schedule</button>
+        </div>
+    </form>
+
+    <!-- Schedule Table -->
+    <div class="schedule-table-container">
+        <table class="calendar-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in schedule_list %}
+                <tr>
+                    <td>{{ entry.date|date:"M d, Y" }}</td>
+                    <td>{{ entry.start_time|time:"h:i A" }}</td>
+                    <td>{{ entry.end_time|time:"h:i A" }}</td>
+                    <td>
+                        {% if entry.status == 'Booked' %}
+                        <span class="status-booked">{{ entry.status }}</span>
+                        {% elif entry.status == 'Available' %}
+                        <span class="status-available">{{ entry.status }}</span>
+                        {% else %}
+                        {{ entry.status }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entry.status == 'Available' %}
+                        <form method="POST" action="{% url 'delete_schedule' entry.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                        {% else %}
+                        <span style="color:#888;">—</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align:center;">No schedules yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

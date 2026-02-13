@@ -1,0 +1,29 @@
+{% extends 'technician_page/technician_dashboard.html' %}
+{% load static %}
+
+{% block tech_home %}
+<div class="tech-home-container">
+    {% if approved %}
+        <!-- Approved Content -->
+        <h2 class="welcome-text">Welcome, {{ technician.full_name }}</h2>
+        <div class="profile-section">
+            <div class="profile-card text-center">
+                {% if technician.profile_image %}
+                    <img src="{{ technician.profile_image.url }}" alt="Profile Picture" class="profile-img mb-3">
+                {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" alt="Profile Picture" class="profile-img mb-3">
+                {% endif %}
+                <h4 class="username">{{ technician.full_name }}</h4>
+                <p class="small text-secondary username-tag">@{{ technician.username }}</p>
+            </div>
+        </div>
+    {% else %}
+        <!-- Pending Approval Content -->
+        <div style="text-align:center; padding:50px;">
+            <h2>Account Pending Approval</h2>
+            <p>Hello <strong>{{ technician.full_name }}</strong>,</p>
+            <p>Your account is under review by the admin. Once approved, you’ll receive a notification and can start accepting bookings.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

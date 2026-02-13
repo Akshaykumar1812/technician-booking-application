@@ -1,0 +1,108 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block verified_tech_list %}
+
+<div class="biodata-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'verified_technicians' %}">Verified Technicians</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Technician Details</li>
+        </ol>
+    </nav>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="biodata-header">
+            {% if technician.profile_image %}
+                <img src="{{ technician.profile_image.url }}" alt="Profile Image" class="profile-img">
+            {% else %}
+                <img src="{% static 'images/default-avatar.png' %}" alt="Default Profile" class="profile-img">
+            {% endif %}
+            <h2>{{ technician.full_name }}</h2>
+            <p>{{ technician.category }} Technician</p>
+            <span class="badge bg-success">Verified</span>
+        </div>
+
+        <hr>
+
+        <!-- Personal Details -->
+        <div class="biodata-section">
+            <h4>Personal Details</h4>
+            <table>
+                <tr>
+                    <td>Username:</td>
+                    <td>{{ technician.username }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ technician.email }}</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>{{ technician.phone }}</td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td>{{ technician.city }}</td>
+                </tr>
+                <tr>
+                    <td>Experience:</td>
+                    <td>{{ technician.experience }} years</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+
+        <!-- Uploaded ID Proof as Image -->
+        {% if technician.id_proof %}
+        <div class="biodata-section">
+            <h4>ID Proof</h4>
+            <div class="border p-3 rounded text-center">
+                <img src="{{ technician.id_proof.url }}" alt="ID Proof" class="img-fluid border rounded mb-2" style="max-height: 300px;">
+                <div>
+                    <a href="{{ technician.id_proof.url }}" download class="btn btn-success mt-2">
+                        <i class="fas fa-download"></i> Download ID Proof
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <br>
+
+        <!-- Uploaded Document as Image -->
+        {% if technician.document %}
+        <div class="biodata-section">
+            <h4>Other Document</h4>
+            <div class="border p-3 rounded text-center">
+                <img src="{{ technician.document.url }}" alt="Document" class="img-fluid border rounded mb-2" style="max-height: 300px;">
+                <div>
+                    <a href="{{ technician.document.url }}" download class="btn btn-success mt-2">
+                        <i class="fas fa-download"></i> Download Document
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <br>
+
+        <!-- Back + Delete -->
+        <div class="biodata-footer d-flex justify-content-between mt-4">
+            <a href="{% url 'verified_technicians' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+
+            <form action="{% url 'delete_technician' technician.id %}" method="POST" style="display:inline;"
+            onsubmit="return confirm('Are you sure you want to delete {{ technician.full_name }}?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete {{ technician.full_name }}
+                </button>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

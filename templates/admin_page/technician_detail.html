@@ -1,0 +1,142 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block details %}
+<div class="biodata-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pending_technicians' %}">Pending Approvals</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Technician Details</li>
+        </ol>
+    </nav>
+    <div class="container">
+
+        <!-- Header -->
+        <div class="biodata-header">
+            <img src="{{ technician.profile_image.url }}" alt="Profile Image" class="profile-img">
+            <h2>{{ technician.full_name }}</h2>
+            <p>{{ technician.category }} Technician</p>
+        </div>
+
+        <hr>
+
+        <!-- Personal Details -->
+        <div class="biodata-section">
+            <h4>Personal Details</h4>
+            <table>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ technician.email }}</td>
+                </tr>
+                <tr>
+                    <td>Phone:</td>
+                    <td>{{ technician.phone }}</td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td>{{ technician.city }}</td>
+                </tr>
+                <tr>
+                    <td>Experience:</td>
+                    <td>{{ technician.experience }} years</td>
+                </tr>
+            </table>
+        </div><br>
+
+
+        <!-- Uploaded ID Proof -->
+        {% if technician.id_proof %}
+        <div class="biodata-section">
+            <h4>Uploaded ID Proof</h4>
+            <div class="row align-items-center border p-2 rounded">
+
+                <!-- File Name -->
+                <div class="col-md-5">
+                    <div class="file-box p-2 border rounded bg-light">
+                        {{ technician.id_proof.name|cut:"idproofs/" }}
+                    </div>
+                </div>
+
+                <!-- File Type -->
+                <div class="col-md-3">
+                    <span class="badge bg-info text-dark">
+                        {{ technician.id_proof.name|slice:"-4:"|upper }}
+                    </span>
+                </div>
+
+                <!-- Download Button -->
+                <div class="col-md-4 text-end">
+                    <a href="{{ technician.id_proof.url }}" download class="btn btn-success">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+        <br>
+
+        <!-- Uploaded Document -->
+        {% if technician.document %}
+        <div class="biodata-section">
+            <h4>Uploaded Document</h4>
+            <div class="row align-items-center border p-2 rounded">
+
+                <!-- File Name -->
+                <div class="col-md-5">
+                    <div class="file-box p-2 border rounded bg-light">
+                        {{ technician.document.name|cut:"documents/" }}
+                    </div>
+                </div>
+
+                <!-- File Type -->
+                <div class="col-md-3">
+                    <span class="badge bg-info text-dark">
+                        {{ technician.document.name|slice:"-4:"|upper }}
+                    </span>
+                </div>
+
+                <!-- Download Button -->
+                <div class="col-md-4 text-end">
+                    <a href="{{ technician.document.url }}" download class="btn btn-success">
+                        <i class="fas fa-download"></i> Download
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+        <br>
+
+<!-- Back + Approve/Reject Buttons -->
+        <div class="biodata-footer d-flex justify-content-between mt-4">
+    <a href="{% url 'pending_technicians' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+
+    <div class="d-flex gap-2">
+        <!-- Approve Form -->
+        <form action="{% url 'approve_technician' technician.id %}" method="POST" style="display:inline;"
+        onsubmit="return confirm('Are you sure you want to APPROVE {{ technician.full_name }}?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check"></i> Approve
+            </button>
+        </form>
+
+        <!-- Reject Form -->
+        <form action="{% url 'reject_technician' technician.id %}" method="POST" style="display:inline;"
+        onsubmit="return confirm('Are you sure you want to REJECT {{ technician.full_name }}?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                <i class="fas fa-times"></i> Reject
+            </button>
+        </form>
+    </div>
+</div>
+
+
+    </div>
+</div>
+{% endblock %}

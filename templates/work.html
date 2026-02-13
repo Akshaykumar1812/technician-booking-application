@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- how-it-works.html -->
+<section class="how-it-works-section">
+    <div class="overlay">
+        <div class="text-center section-header">
+            <h2>How It Works</h2>
+            <p>Your trusted platform for connecting with professional technicians</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="icon-box blue"><i class="ri-user-line"></i></div>
+                    <p class="stat-number">10,000+</p>
+                    <p>Active Users</p>
+                </div>
+                <div class="stat-item">
+                    <div class="icon-box green"><i class="ri-tools-line"></i></div>
+                    <p class="stat-number">5,000+</p>
+                    <p>Verified Technicians</p>
+                </div>
+                <div class="stat-item">
+                    <div class="icon-box purple"><i class="ri-check-line"></i></div>
+                    <p class="stat-number">50,000+</p>
+                    <p>Jobs Completed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Users info-->
+<section class="service-seekers-section">
+    <div class="container">
+        <div class="sub-section">
+            <h3>For Service Seekers</h3>
+            <p>Experience hassle-free service booking with our simple 4-step process</p>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-img">
+                        <img src="{% static 'images/user-service1.jpg' %}" alt="Select Service">
+                        <div class="step-number">1</div>
+                    </div>
+                    <h4>Select Service</h4>
+                    <p>Choose from our wide range of professional services and specify your requirements.</p>
+                </div>
+                <div class="step">
+                    <div class="step-img">
+                        <img src="{% static 'images/user-service2.jpg' %}" alt="Choose Technician">
+                        <div class="step-number">2</div>
+                    </div>
+                    <h4>Choose Technician</h4>
+                    <p>Browse verified technicians, check their ratings, reviews, and availability in your area.</p>
+                </div>
+                <div class="step">
+                    <div class="step-img">
+                        <img src="{% static 'images/user-service3.jpg' %}" alt="Book Appointment">
+                        <div class="step-number">3</div>
+                    </div>
+                    <h4>Book Appointment</h4>
+                    <p>Schedule your appointment at a convenient time and receive instant confirmation.</p>
+                </div>
+                <div class="step">
+                    <div class="step-img">
+                        <img src="{% static 'images/user-service4.jpg' %}" alt="Get Service">
+                        <div class="step-number">4</div>
+                    </div>
+                    <h4>Get Service</h4>
+                    <p>Receive professional service from verified technicians and rate your experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--Technician Info -->
+<section class="technicians-section">
+    <div class="container">
+        <div class="sub-section">
+            <h3>For Professional Technicians</h3>
+            <p>Join our platform and grow your business with access to more customers</p>
+            <div class="cards">
+                <div class="card border-blue">
+                    <div class="card-icon blue"><i class="ri-user-add-line"></i></div>
+                    <h4>1. Create Your Profile</h4>
+                    <p>Sign up and complete your professional profile with your skills, experience, and credentials.</p>
+                    <ul>
+                        <li><i class="ri-check-line green"></i> Easy registration process</li>
+                        <li><i class="ri-check-line green"></i> Upload certifications</li>
+                        <li><i class="ri-check-line green"></i> Set your service area</li>
+                    </ul>
+                </div>
+                <div class="card border-green">
+                    <div class="card-icon green"><i class="ri-calendar-check-line"></i></div>
+                    <h4>2. Manage Your Schedule</h4>
+                    <p>Set your availability and receive booking requests from customers in your area.</p>
+                    <ul>
+                        <li><i class="ri-check-line green"></i> Flexible working hours</li>
+                        <li><i class="ri-check-line green"></i> Accept/decline requests</li>
+                        <li><i class="ri-check-line green"></i> Calendar management</li>
+                    </ul>
+                </div>
+                <div class="card border-purple">
+                    <div class="card-icon purple"><i class="ri-money-dollar-circle-line"></i></div>
+                    <h4>3. Grow Your Business</h4>
+                    <p>Build your reputation through reviews and earn more with our platform.</p>
+                    <ul>
+                        <li><i class="ri-check-line green"></i> Secure payments</li>
+                        <li><i class="ri-check-line green"></i> Customer reviews</li>
+                        <li><i class="ri-check-line green"></i> Business analytics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust Info -->
+<section class="safety-section">
+    <div class="safety-icon">
+        <i class="ri-shield-check-line"></i>
+    </div>
+    <h3>Your Safety & Trust Is Our Priority</h3>
+    <p>Every technician undergoes a thorough verification process before joining our platform</p>
+
+    <div class="trust-cards">
+        <div class="trust-card">
+            <div class="trust-icon green"><i class="ri-user-follow-line"></i></div>
+            <h4>Identity Verification</h4>
+            <p>Government ID verification and background checks</p>
+        </div>
+        <div class="trust-card">
+            <div class="trust-icon blue"><i class="ri-file-list-3-line"></i></div>
+            <h4>Professional Licensing</h4>
+            <p>Verification of all required professional licenses</p>
+        </div>
+        <div class="trust-card">
+            <div class="trust-icon purple"><i class="ri-customer-service-2-line"></i></div>
+            <h4>24/7 Support</h4>
+            <p>Dedicated support team for any concerns</p>
+        </div>
+    </div>
+</section>
+
+
+
+{% endblock %}

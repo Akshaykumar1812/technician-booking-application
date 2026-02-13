@@ -1,0 +1,47 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block admin_transaction_detail %}
+
+<div class="admin-transaction-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'admin_completed_bookings' %}">Completed Bookings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Transaction Details</li>
+        </ol>
+    </nav>
+
+    <h2 class="transaction-title">Transaction Details</h2>
+
+    <div class="transaction-card">
+
+        <!-- Payment Info -->
+        {% if payment %}
+        <div class="transaction-section">
+            <h4>Payment Information</h4>
+            <p><strong>Booking ID:</strong> {{ booking.id }}</p>
+            <p><strong>Amount Paid:</strong> ₹{{ payment.total_amount }}</p>
+            <p><strong>Payment Status:</strong>
+                <span class="badge {% if payment.payment_status == 'Paid' %}bg-success{% else %}bg-warning{% endif %}">
+                    {{ payment.payment_status }}
+                </span>
+            </p>
+            <p><strong>Payment Date:</strong> {{ payment.payment_date|date:"M d, Y h:i A" }}</p>
+            <p><strong>Payment Method:</strong> {{ payment.payment_method }}</p>
+            <p><strong>Repair Description:</strong> {{ payment.repair_description }}</p>
+        </div>
+        {% else %}
+        <p>No payment details available for this booking.</p>
+        {% endif %}
+
+
+        <!-- Back Button -->
+        <div class="transaction-footer">
+            <a href="{% url 'admin_completed_bookings' %}" class="back-btn">← Back to Bookings</a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

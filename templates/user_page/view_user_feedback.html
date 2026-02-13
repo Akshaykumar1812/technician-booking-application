@@ -1,0 +1,55 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block user_feedback %}
+
+<div class="feedback-container">
+
+    <!-- Breadcrumbs -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb feedback-breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Feedbacks</li>
+        </ol>
+    </nav>
+
+    <h2 class="feedback-title">My Feedbacks</h2>
+
+    {% if feedbacks %}
+    <div class="feedback-list">
+        {% for fb in feedbacks %}
+        <div class="feedback-card">
+            <div class="feedback-header">
+                <img src="{{ fb.technician.profile_image.url }}" alt="Technician Image" class="tech-img">
+                <div class="tech-details">
+                    <h3 class="tech-name">{{ fb.technician.full_name }}</h3>
+                    <p class="tech-category">{{ fb.technician.category }}</p>
+                    <div class="rating">
+                        {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= fb.rating %} <i class="fa fa-star filled"></i>
+                            {% else %}
+                            <i class="fa fa-star"></i>
+                            {% endif %}
+                            {% endfor %}
+                            <span class="rating-number">{{ fb.rating }}/5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-body">
+                <p class="feedback-comment">“{{ fb.comment }}”</p>
+            </div>
+
+            <div class="feedback-footer">
+                <p class="feedback-date">{{ fb.created_at|date:"M d, Y, h:i A" }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-feedback">You have not submitted any feedback yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

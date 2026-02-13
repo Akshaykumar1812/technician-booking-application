@@ -1,0 +1,62 @@
+{% extends 'admin_page/admin_dashboard.html' %}
+{% load static %}
+
+{% block users_list %}
+<div class="userlist-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'admin_home' %}">Admin Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Users List</li>
+        </ol>
+    </nav>
+
+    <h2 class="title text-center">Users List</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sl No.</th>
+                    <th>Profile Image</th>
+                    <th>Full Name</th>
+                    <th>Address</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {% if user.profile_image %}
+                            <img src="{{ user.profile_image.url }}" alt="Profile" width="50" height="50" class="rounded-circle">
+                        {% else %}
+                            <img src="{% static 'images/default_profile.png' %}" alt="Profile" width="50" height="50" class="rounded-circle">
+                        {% endif %}
+                    </td>
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.address }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.phone }}</td>
+                    <td>
+                        <a href="{% url 'delete_user' user.id %}" 
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure you want to delete {{ user.full_name }}?');">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No users found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

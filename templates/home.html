@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+<main class="main-fullscreen d-flex align-items-center justify-content-center">
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col-md-7 col-lg-6">
+            <h1><strong>Find Trusted Local <span class="text-primary">Technicians</span> Near You</strong></h1>
+            <p class="lead">
+                Connect with verified electricians, plumbers, mechanics, and more.<br>
+                Book appointments, chat in real-time, and get quality service from professionals in your area.
+            </p>
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 What service do you need?" />
+                <input type="text" class="search-input" placeholder="📍 Enter your location" />
+                <button class="book-btn" onclick="loginAlert()">Find Techniciain</button>
+            </div>
+            <div class="mt-4">
+                <a href="{% url 'register_technician' %}" class="btn btn-outline-primary">Register as Technician</a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+function loginAlert() {
+    alert("Please login to book a technician.");
+}
+</script>
+</main>
+
+{% endblock %}
+
+

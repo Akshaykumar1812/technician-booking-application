@@ -1,0 +1,25 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block userhome %}
+<div class="user-dashboard-container">
+
+    <!-- Welcome Message -->
+    <h2 class="welcome-text">Welcome, {{ user_obj.full_name }}</h2>
+
+    <!-- Profile Section -->
+    <div class="profile-section">
+        <div class="profile-card text-center">
+            {% if user_obj.profile_image %}
+                <img src="{{ user_obj.profile_image.url }}" alt="Profile Picture" class="profile-img mb-3">
+            {% else %}
+                <img src="{% static 'images/default_profile.png' %}" alt="Profile Picture" class="profile-img mb-3">
+            {% endif %}
+
+            <h4 class="username">{{ user_obj.full_name }}</h4>
+            <p class="small text-secondary username-tag">@{{ user_obj.username }}</p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

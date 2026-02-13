@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="service-hero">
+  <div class="overlay">
+    <div class="content">
+      <h1>Professional Services at Your Fingertips</h1>
+      <p>Connecting you to trusted service</p>
+    </div>
+  </div>
+</section>
+
+<section class="service-categories">
+  <div class="container">
+    <div class="heading">
+      <h2>Our Service Categories</h2>
+      <p>Professional technicians ready to help with all your needs</p>
+    </div>
+    <div class="service-grid">
+      
+      <!-- Card 1 -->
+      <div class="service-card">
+        <div class="icon blue"><i class="ri-flashlight-line ri-2x"></i></div>
+        <h3>Electrical Services</h3>
+        <p>Wiring, installations, repairs, and electrical maintenance by certified electricians.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card">
+        <div class="icon green"><i class="ri-drop-line ri-2x"></i></div>
+        <h3>Plumbing Services</h3>
+        <p>Pipe repairs, installations, drain cleaning, and emergency plumbing services.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card">
+        <div class="icon orange"><i class="ri-tools-line ri-2x"></i></div>
+        <h3>HVAC Services</h3>
+        <p>Heating, ventilation, air conditioning installation, repair, and maintenance.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="service-card">
+        <div class="icon purple"><i class="ri-hammer-line ri-2x"></i></div>
+        <h3>Carpentry</h3>
+        <p>Custom woodwork, furniture repair, cabinet installation, and general carpentry.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="service-card">
+        <div class="icon red"><i class="ri-tools-line ri-2x"></i></div>
+        <h3>Appliance Repair</h3>
+        <p>Washing machines, refrigerators, dishwashers, and other home appliance repairs.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 6 -->
+      <div class="service-card">
+        <div class="icon indigo"><i class="ri-car-line ri-2x"></i></div>
+        <h3>Automotive</h3>
+        <p>Car repairs, maintenance, diagnostics, and mobile mechanic services.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 7 -->
+      <div class="service-card">
+        <div class="icon teal"><i class="ri-paint-brush-line ri-2x"></i></div>
+        <h3>Painting Services</h3>
+        <p>Interior and exterior painting, wall preparation, and decorative finishes.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+      <!-- Card 8 -->
+      <div class="service-card">
+        <div class="icon yellow"><i class="ri-settings-line ri-2x"></i></div>
+        <h3>General Maintenance</h3>
+        <p>Home repairs, maintenance tasks, and handyman services for various needs.</p>
+        <button class="book-btn" onclick="loginAlert()">Book Now</button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+function loginAlert() {
+    alert("Please login to book a technician.");
+}
+</script>
+
+
+{% endblock %}

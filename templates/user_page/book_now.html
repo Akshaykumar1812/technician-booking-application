@@ -1,0 +1,160 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block booknow %}
+<div class="booking-page-container">
+
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb-container" aria-label="breadcrumb">
+        <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'user_services' %}">Services</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Booking</li>
+        </ol>
+    </nav>
+
+    <div class="booking-content">
+
+        <!-- Technician Header -->
+        <div class="tech-header">
+            <img src="{% if technician.profile_image %}{{ technician.profile_image.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}"
+                class="tech-profile-img" alt="Technician Profile">
+            <h2 class="tech-name">{{ technician.full_name }}</h2>
+            <p class="tech-category">{{ technician.category }} Technician</p>
+            <span class="verified-badge">Verified</span>
+        </div>
+
+        <!-- Personal Details -->
+        <div class="personal-details">
+            <h4 class="section-title">Personal Details</h4>
+            <table class="details-table">
+                <tr>
+                    <td>Username:</td>
+                    <td>{{ technician.username }}</td>
+                </tr>
+                <tr>
+                    <td>Email:</td>
+                    <td>{{ technician.email }}</td>
+                </tr>
+                <tr>
+                    <td>City:</td>
+                    <td>{{ technician.city }}</td>
+                </tr>
+                <tr>
+                    <td>Experience:</td>
+                    <td>{{ technician.experience }} years</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Read-Only Booking Schedule -->
+        <div class="booking-schedule">
+            <h4 class="section-title">Technician Schedule</h4>
+            {% if schedule %}
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for slot in schedule %}
+                    <tr>
+                        <td>{{ slot.date|date:"M d, Y" }}</td>
+                        <td>{{ slot.start_time|time:"h:i A" }}</td>
+                        <td>{{ slot.end_time|time:"h:i A" }}</td>
+                        <td>
+                            {% if slot.status == 'Booked' %}
+                            <span class="status-booked">{{ slot.status }}</span>
+                            {% else %}
+                            <span class="status-available">{{ slot.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" style="text-align:center;">No schedule available.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="no-schedule">No schedule available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Technician Calendar Form (button replaced) -->
+        <div class="calendar-container user-add-calendar-form">
+            <h4 class="section-title">Book the technician</h4>
+            <form method="POST" onsubmit="return confirm('Are you sure you want to confirm the booking?');">
+                {% csrf_token %}
+                <div class="calendar-form-grid">
+                    <div class="form-group">
+                        <label for="date">Date</label>
+                        <input type="date" name="date" id="date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="start_time">Start Time</label>
+                        <input type="time" name="start_time" id="start_time" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end_time">End Time</label>
+                        <input type="time" name="end_time" id="end_time" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="repair_details">Repair / Service Details</label>
+                    <textarea name="repair_details" id="repair_details" rows="3"
+                        placeholder="Describe the issue or service required" required></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-confirm">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+
+       
+<!-- Feedbacks -->
+<div class="feedback-section">
+    <h4 class="feedback-title">Feedbacks & Ratings</h4>
+
+    {% if feedbacks %}
+    <div class="feedback-list-thin">
+        {% for fb in feedbacks %}
+        <div class="feedback-row-thin feedback-card-white">
+            <div class="feedback-left">
+                <img src="{% if fb.user.profile_image %}{{ fb.user.profile_image.url }}{% else %}{% static 'images/default_profile.png' %}{% endif %}" 
+                     alt="{{ fb.user_name }}" class="feedback-user-img">
+                
+            </div>
+            <div class="feedback-right">
+                <div class="feedback-user-info">
+                    <span class="feedback-user-name">{{ fb.user.username }}</span>
+                </div>
+                <div class="feedback-rating">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= fb.rating %}★{% else %}☆{% endif %}
+                    {% endfor %}
+                    
+                </div>
+                <p class="feedback-comment">{{ fb.comment }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-feedback-text">No feedbacks yet.</p>
+    {% endif %}
+</div>
+
+
+        </div>
+    </div>
+    {% endblock %}

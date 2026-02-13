@@ -1,0 +1,134 @@
+{% extends 'user_page/user_dashboard.html' %}
+{% load static %}
+
+{% block user_profile %}
+<div class="profile-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_home' %}">User Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Profile</li>
+        </ol>
+    </nav>
+
+    <div class="profile-content">
+        <h2 class="title text-center">My Profile</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="profile-form">
+            {% csrf_token %}
+
+            <div class="profile-grid">
+                <!-- Left Column: Biodata -->
+                <div class="profile-left">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" value="{{ user_obj.full_name }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" value="{{ user_obj.username }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="text" name="phone" value="{{ user_obj.phone }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ user_obj.email }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Profile Image</label><br>
+                        {% if user_obj.profile_image %}
+                            <img src="{{ user_obj.profile_image.url }}" class="profile-preview" alt="Profile Image">
+                        {% endif %}
+                        <input type="file" name="profile_image">
+                    </div>
+                </div>
+
+                <!-- Right Column: Location -->
+                <div class="profile-right">
+
+                    <div class="form-group">
+                        <label>Address</label>
+                        <textarea id="address" name="address">{{ user_obj.address|default_if_none:'' }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>City (Auto-detected)</label>
+                        <input type="text" id="city" name="city" value="{{ user_obj.city|default_if_none:''}}" readonly>
+                    </div>
+
+                    <input type="hidden" id="latitude" name="latitude" value="{{ user_obj.latitude |default_if_none:''}}">
+                    <input type="hidden" id="longitude" name="longitude" value="{{ user_obj.longitude|default_if_none:'' }}">
+
+                    <div class="form-group">
+                        <button type="button" class="detect-btn" onclick="getLocation()"> Detect My Location</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Update Button: placed outside grid, centered -->
+    <div class="form-actions">
+        <button type="submit" class="update-btn">Update Profile</button>
+    </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError, {enableHighAccuracy: true});
+    } else {
+        alert("Geolocation is not supported by your browser.");
+    }
+}
+
+function showPosition(position) {
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
+
+    document.getElementById("latitude").value = lat;
+    document.getElementById("longitude").value = lon;
+
+    // Reverse geocode using OpenStreetMap Nominatim
+    fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json&accept-language=en&addressdetails=1`)
+  .then(response => response.json())
+  .then(data => {
+      const address = data.address || {};
+      const city =
+          address.city ||
+          address.town ||
+          address.village ||
+          address.suburb ||
+          address.locality ||
+          address.county ||
+          address.state_district ||
+          "";
+
+      document.getElementById("city").value = city;
+  })
+  .catch(err => console.log("Error fetching city:", err));
+
+}
+
+function showError(error) {
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert("Location permission denied. Please allow location access.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            alert("Location request timed out.");
+            break;
+        default:
+            alert("An unknown error occurred while fetching location.");
+    }
+}
+</script>
+
+{% endblock %}
